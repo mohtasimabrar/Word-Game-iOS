@@ -14,6 +14,10 @@ class ViewController: UIViewController {
     var currentAnswer: UITextField!
     var letterButtons = [UIButton]()
     
+    var submit: UIButton!
+    var clear: UIButton!
+    var buttonsView: UIView!
+    
     var activatedButtons = [UIButton]()
     var solutions = [String]()
     
@@ -27,6 +31,31 @@ class ViewController: UIViewController {
     override func loadView() {
         view = UIView()
         view.backgroundColor = .white
+        
+        addElements()
+        addConstraints()
+        
+        let width = 150
+        let height = 80
+        
+        for row in 0..<4 {
+            for col in 0..<5 {
+                let letterButton = UIButton(type: .system)
+                letterButton.titleLabel?.font = UIFont.systemFont(ofSize: 36)
+                letterButton.setTitle("WWW", for: .normal)
+                
+                let frame = CGRect(x: col*width, y: row*height, width: width, height: height)
+                letterButton.frame = frame
+                
+                letterButton.addTarget(self, action: #selector(letterTapped), for: .touchUpInside)
+                
+                buttonsView.addSubview(letterButton)
+                letterButtons.append(letterButton)
+            }
+        }
+    }
+    
+    func addElements() {
         
         scoreLabel = UILabel()
         scoreLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -60,22 +89,24 @@ class ViewController: UIViewController {
         currentAnswer.isUserInteractionEnabled = false
         view.addSubview(currentAnswer)
         
-        let submit = UIButton(type: .system)
+        submit = UIButton(type: .system)
         submit.translatesAutoresizingMaskIntoConstraints = false
         submit.setTitle("SUBMIT", for: .normal)
         submit.addTarget(self, action: #selector(submitTapped), for: .touchUpInside)
         view.addSubview(submit)
         
-        let clear = UIButton(type: .system)
+        clear = UIButton(type: .system)
         clear.translatesAutoresizingMaskIntoConstraints = false
         clear.setTitle("CLEAR", for: .normal)
         clear.addTarget(self, action: #selector(clearTapped), for: .touchUpInside)
         view.addSubview(clear)
         
-        let buttonsView = UIView()
+        buttonsView = UIView()
         buttonsView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonsView)
-        
+    }
+    
+    func addConstraints() {
         NSLayoutConstraint.activate([
             scoreLabel.topAnchor.constraint(equalTo: view.layoutMarginsGuide.topAnchor, constant: 20),
             scoreLabel.rightAnchor.constraint(equalTo: view.layoutMarginsGuide.rightAnchor, constant: -20),
@@ -114,24 +145,6 @@ class ViewController: UIViewController {
             buttonsView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -20)
             
         ])
-        let width = 150
-        let height = 80
-        
-        for row in 0..<4 {
-            for col in 0..<5 {
-                let letterButton = UIButton(type: .system)
-                letterButton.titleLabel?.font = UIFont.systemFont(ofSize: 36)
-                letterButton.setTitle("WWW", for: .normal)
-                
-                let frame = CGRect(x: col*width, y: row*height, width: width, height: height)
-                letterButton.frame = frame
-                
-                letterButton.addTarget(self, action: #selector(letterTapped), for: .touchUpInside)
-                
-                buttonsView.addSubview(letterButton)
-                letterButtons.append(letterButton)
-            }
-        }
     }
     
     override func viewDidLoad() {
@@ -148,7 +161,7 @@ class ViewController: UIViewController {
         activatedButtons.append(sender)
         sender.isHidden = true
     }
-
+    
     @objc func submitTapped(_ sender: UIButton) {
         guard let answerText = currentAnswer.text else { return }
         
@@ -174,7 +187,7 @@ class ViewController: UIViewController {
             present(ac, animated: true)
         }
     }
-
+    
     @objc func clearTapped(_ sender: UIButton) {
         currentAnswer.text = ""
         
@@ -263,5 +276,5 @@ class ViewController: UIViewController {
             }
         }
     }
-
+    
 }
